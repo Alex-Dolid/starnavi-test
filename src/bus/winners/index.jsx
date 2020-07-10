@@ -10,8 +10,8 @@ import { isEmptyArray } from "../../helpers";
 const Winners = () => {
   const { data, isLoading, error } = useWinnersFetch();
 
-  const errorMessageJSX = error && <p>{error}</p>;
-  const loaderJSX = isLoading && <p>Loading data from API...</p>;
+  const errorMessageJSX = error && <p className="error">{error}</p>;
+  const loaderJSX = isLoading && <p className="loading">Loading data from API...</p>;
 
   return (
     <div className="container">

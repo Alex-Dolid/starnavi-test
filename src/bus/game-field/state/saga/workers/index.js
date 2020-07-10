@@ -1,0 +1,1 @@
+export { fetchGameSettingsWorker } from "./fetchGameSettingsWorker";

@@ -10,10 +10,21 @@ import Option from "./Option";
 // Hooks
 import {useOnClickOutside} from "../../hooks/useOnClickOutside";
 
-const Select = ({options, value, placeholder = '', onChange, className = '', iconName = "icon-select-arrow", isLoading}) => {
+const Select = ({options, value, placeholder = '', onChange, className = '', iconName = "icon-select-arrow", isLoading, error}) => {
   const selectedOption = useMemo(() => options.find(option => option.value === value), [options, value]);
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
+
+  let selectValue = "";
+  if (selectedOption) {
+    selectValue = selectedOption.label;
+  } else if (isLoading) {
+    selectValue = "Loading...";
+  } else {
+    selectValue = placeholder;
+  }
+
+  const errorMessageJSX = error && <p className="error">{error}</p>;
 
   const callbackClickOutside = useCallback(() => setIsOpen(false), []);
   useOnClickOutside(selectRef, callbackClickOutside);
@@ -24,13 +35,13 @@ const Select = ({options, value, placeholder = '', onChange, className = '', ico
 
   const handleClickOption = useCallback((option) => {
     toggleIsOpen();
-    onChange(option.value, option.label);
+    onChange && onChange(option.value);
   }, [onChange, toggleIsOpen]);
 
   return (
     <div className={`select ${className}`} ref={selectRef}>
       <div className="select__top" onClick={toggleIsOpen}>
-        <div className="select__value">{selectedOption ? selectedOption.label : placeholder}</div>
+        <div className="select__value">{selectValue}</div>
         <Icon
           className={classNames("select__marker", {'select__marker_inverted': isOpen})}
           style={{order: 3}}
@@ -46,16 +57,20 @@ const Select = ({options, value, placeholder = '', onChange, className = '', ico
           <div
             className={classNames(`select__options`, {"select__options_loading": isLoading})}>
             {
-              options.map((option, i) =>
-                <React.Fragment key={i}>
-                  <Option
-                    selected={selectedOption?.value === option.value}
-                    onClick={() => handleClickOption(option)}
-                  >
-                    {option.label}
-                  </Option>
-                </React.Fragment>
-              )
+              !error ?
+                options.map((option, i) =>
+                  <React.Fragment key={i}>
+                    <Option
+                      selected={selectedOption?.value === option.value}
+                      onClick={handleClickOption}
+                      option={option}
+                    >
+                      {option.label}
+                    </Option>
+                  </React.Fragment>
+                )
+                :
+                errorMessageJSX
             }
           </div>
         </div>

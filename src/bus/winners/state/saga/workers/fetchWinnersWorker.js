@@ -1,8 +1,9 @@
 // Core
 import { call, put } from "redux-saga/effects"
+// Api actions
 import {fetchWinnersAPI} from "../../api";
-import {fetchWinnersFailed, fetchWinnersSuccess} from "../../action";
 // Actions
+import {fetchWinnersFailed, fetchWinnersSuccess} from "../../action";
 
 export function* fetchWinnersWorker() {
   try {
