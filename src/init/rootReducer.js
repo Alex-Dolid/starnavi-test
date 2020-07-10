@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 //reducers
-import { winnersReducer as winners } from "../bus/winners/reducer";
+import { winnersReducer as winners } from "../bus/winners/state/reducer";
 
 
 const rootReducer = combineReducers({

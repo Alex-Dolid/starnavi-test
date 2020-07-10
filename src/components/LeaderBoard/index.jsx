@@ -9,7 +9,7 @@ const LeaderBoard = ({arrWinners}) => {
   return (
     <div className="leaderBoard">
       {
-        arrWinners.map(winner => <LeaderCard winner={winner}/>)
+        arrWinners.map(winner => <LeaderCard key={winner.id} winner={winner}/>)
       }
     </div>
   )

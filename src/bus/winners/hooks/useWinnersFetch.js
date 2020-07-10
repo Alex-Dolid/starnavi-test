@@ -2,17 +2,20 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // Actions
-import { fetchWinners } from "../action";
+import { fetchWinners } from "../state/action";
 
 export const useWinnersFetch = () => {
   const dispatch = useDispatch();
-  const { data, isLoading } = useSelector(state => state.winners);
+  const { data, isLoading, error } = useSelector(state => state.winners);
 
-  useEffect(() => dispatch(fetchWinners()), []);
+  useEffect(() => {
+    dispatch(fetchWinners())
+  }, [dispatch]);
 
   return {
     data,
-    isLoading
+    isLoading,
+    error
   }
 
 };

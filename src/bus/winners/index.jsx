@@ -8,21 +8,25 @@ import { useWinnersFetch } from "./hooks/useWinnersFetch";
 import { isEmptyArray } from "../../helpers";
 
 const Winners = () => {
-  const { data, isLoading } = useWinnersFetch();
+  const { data, isLoading, error } = useWinnersFetch();
 
+  const errorMessageJSX = error && <p>{error}</p>;
   const loaderJSX = isLoading && <p>Loading data from API...</p>;
 
   return (
-    <>
-      <h1>Leader Board</h1>
-      {loaderJSX}
-      {
-        !isLoading && !isEmptyArray(data) ?
-          <LeaderBoard arrWinners={data} />
-          :
-          null
-      }
-    </>
+    <div className="container">
+      <div className="container-inner container-inner_with-divider">
+        <h1 className="title">Leader Board</h1>
+        {errorMessageJSX}
+        {loaderJSX}
+        {
+          !isLoading && !isEmptyArray(data) ?
+            <LeaderBoard arrWinners={data} />
+            :
+            null
+        }
+      </div>
+    </div>
   )
 };
 
