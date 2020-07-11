@@ -20,8 +20,8 @@ const Winners = () => {
         {errorMessageJSX}
         {loaderJSX}
         {
-          !isLoading && !isEmptyArray(data) ?
-            <LeaderBoard arrWinners={data} />
+          !isEmptyArray(data) ?
+            <LeaderBoard arrWinners={data} isLoading={isLoading} />
             :
             null
         }

@@ -7,8 +7,12 @@ import GameTable from "../../components/GameTable";
 import {useGameSettingsFetch} from "./hooks/useGameSettingsFetch";
 // Helpers
 import {isEmptyObj} from "../../helpers";
+import {sendWinner} from "../winners/state/action";
+import {useDispatch} from "react-redux";
+import {format} from "date-fns";
 
 const GameField = () => {
+  const dispatch = useDispatch();
   const {settings, isLoading, error} = useGameSettingsFetch();
 
   const [gameControls, setGameControls] = useState({
@@ -53,40 +57,44 @@ const GameField = () => {
   }, [settings, stateInputGroup.gameMode]);
 
   const finishGame = useCallback((winner) => {
+    winner = winner === "user" ? stateInputGroup.userName : "Computer";
     setGameControls({
       ...gameControls,
-      winner: winner === "user" ? stateInputGroup.userName : "Computer",
+      winner,
       isPlaying: false
     });
 
-  }, [gameControls, stateInputGroup.userName]);
+    dispatch(sendWinner(winner, format(new Date(), "HH:mm; dd MMMM yyyy")));
+  }, [gameControls, stateInputGroup.userName, dispatch]);
 
   return (
-    <div className="game-field">
-      <div className="input-group">
-        <Select
-          options={options}
-          placeholder="Pick game mode"
-          isLoading={isLoading}
-          error={error}
-          value={stateInputGroup.gameMode}
-          onChange={handleGameMode}
+    <div className="container">
+      <div className="game-field">
+        <div className="input-group">
+          <Select
+            options={options}
+            placeholder="Pick game mode"
+            isLoading={isLoading}
+            error={error}
+            value={stateInputGroup.gameMode}
+            onChange={handleGameMode}
+          />
+          <input
+            type="text"
+            className="input"
+            placeholder="Enter your name"
+            value={stateInputGroup.userName}
+            onChange={handleUserName}
+          />
+          <button type="button" className="button" onClick={startGame}>{gameControls.winner ? "Play again" : "Play"}</button>
+        </div>
+        <GameTable
+          settings={getGameSetting()}
+          isPlaying={gameControls.isPlaying}
+          finishGame={finishGame}
+          message={gameControls.winner}
         />
-        <input
-          type="text"
-          className="input"
-          placeholder="Enter your name"
-          value={stateInputGroup.userName}
-          onChange={handleUserName}
-        />
-        <button type="button" className="button" onClick={startGame}>{gameControls.winner ? "Play again" : "Play"}</button>
       </div>
-      <GameTable
-        settings={getGameSetting()}
-        isPlaying={gameControls.isPlaying}
-        finishGame={finishGame}
-        message={gameControls.winner}
-      />
     </div>
   )
 };
