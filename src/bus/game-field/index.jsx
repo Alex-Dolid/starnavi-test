@@ -1,7 +1,8 @@
 // Core
-import React, {useReducer, useCallback} from "react";
+import React, {useCallback, useReducer, useState} from "react";
 // Components
 import Select from "../../components/Select";
+import GameTable from "../../components/GameTable";
 // Hooks
 import {useGameSettingsFetch} from "./hooks/useGameSettingsFetch";
 // Helpers
@@ -9,11 +10,18 @@ import {isEmptyObj} from "../../helpers";
 
 const GameField = () => {
   const {settings, isLoading, error} = useGameSettingsFetch();
-  const [stateInputGroup, setStateInputGroup] = useReducer((state, newState) => ({...state, ...newState}), {
-    gameMode: null,
-    userName: null,
-    isPlayed: false
+
+  const [gameControls, setGameControls] = useState({
+    isPlaying: false,
+    winner: ""
   });
+  const [stateInputGroup, setStateInputGroup] = useReducer(
+    (state, newState) => ({...state, ...newState}),
+    {
+      gameMode: null,
+      userName: "",
+    }
+  );
 
   const options = [];
   if (!isEmptyObj(settings)) Object.keys(settings).forEach(item => {
@@ -21,8 +29,37 @@ const GameField = () => {
   });
 
   // InputGroup handlers
-  const handleGameMode = useCallback((gameMode) => setStateInputGroup({gameMode}),[setStateInputGroup]);
-  const handleUserName = useCallback((e) => setStateInputGroup({userName: e.target.value}), [setStateInputGroup]);
+  const handleGameMode = useCallback((gameMode) => {
+    !gameControls.isPlaying && setStateInputGroup({gameMode})
+  }, [setStateInputGroup, gameControls.isPlaying]);
+
+  const handleUserName = useCallback((e) => {
+    !gameControls.isPlaying && setStateInputGroup({userName: e.target.value})
+  }, [setStateInputGroup, gameControls.isPlaying]);
+
+  const startGame = useCallback(() => {
+    if (
+      !gameControls.isPlaying &&
+      stateInputGroup.userName &&
+      stateInputGroup.gameMode
+    ) {
+      setGameControls({isPlaying: true});
+    }
+  }, [stateInputGroup, gameControls]);
+
+  // GameTable helpers
+  const getGameSetting = useCallback(() => {
+    if (!isEmptyObj(settings) && stateInputGroup.gameMode) return settings[stateInputGroup.gameMode]
+  }, [settings, stateInputGroup.gameMode]);
+
+  const finishGame = useCallback((winner) => {
+    setGameControls({
+      ...gameControls,
+      winner: winner === "user" ? stateInputGroup.userName : "Computer",
+      isPlaying: false
+    });
+
+  }, [gameControls, stateInputGroup.userName]);
 
   return (
     <div className="game-field">
@@ -42,8 +79,14 @@ const GameField = () => {
           value={stateInputGroup.userName}
           onChange={handleUserName}
         />
-        <button type="button" className="button">Play</button>
+        <button type="button" className="button" onClick={startGame}>{gameControls.winner ? "Play again" : "Play"}</button>
       </div>
+      <GameTable
+        settings={getGameSetting()}
+        isPlaying={gameControls.isPlaying}
+        finishGame={finishGame}
+        message={gameControls.winner}
+      />
     </div>
   )
 };

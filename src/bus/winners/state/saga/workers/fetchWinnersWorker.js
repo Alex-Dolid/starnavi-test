@@ -11,5 +11,6 @@ export function* fetchWinnersWorker() {
     yield put(fetchWinnersSuccess(data))
   } catch (e) {
     yield put(fetchWinnersFailed(e));
+    alert(e);
   }
 }

@@ -11,5 +11,6 @@ export function* fetchGameSettingsWorker() {
     yield put(fetchGameSettingsSuccess(data))
   } catch (e) {
     yield put(fetchGameSettingsFailed(e));
+    alert(e);
   }
 }

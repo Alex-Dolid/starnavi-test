@@ -1,0 +1,27 @@
+.game-table {
+  width: 300px;
+  margin-top: 30px;
+
+  &__message {
+    min-height: 25px;
+    text-align: center;
+  }
+
+  &__body {
+    height: 300px;
+    border: 1px solid rgba(grey, 0.3);
+    display: grid;
+  }
+
+  &__cell {
+    &_target {
+      background-color: darkblue;
+    }
+    &_user {
+      background-color: green;
+    }
+    &_computer {
+      background-color: red;
+    }
+  }
+}

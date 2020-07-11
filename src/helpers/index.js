@@ -9,3 +9,15 @@ export const isEmptyObj = obj => {
   }
   return true;
 };
+
+export const getRandomInteger = (min, max, exceptions = []) => {
+
+  const _random = () => Math.floor(min + Math.random() * (max + 1 - min));
+
+  let rand = _random();
+  for ( ; exceptions.find(num => rand === num); ) {
+    rand = _random();
+  }
+
+  return rand;
+};
