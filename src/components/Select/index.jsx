@@ -26,6 +26,7 @@ const Select = ({options, value, placeholder = '', onChange, className = '', ico
 
   const errorMessageJSX = error && <p className="error">{error}</p>;
 
+  // Logic of closing select
   const callbackClickOutside = useCallback(() => setIsOpen(false), []);
   useOnClickOutside(selectRef, callbackClickOutside);
 

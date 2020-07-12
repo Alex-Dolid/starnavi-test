@@ -21,7 +21,7 @@ const Winners = () => {
         {loaderJSX}
         {
           !isEmptyArray(data) ?
-            <LeaderBoard arrWinners={data} isLoading={isLoading} />
+            <LeaderBoard arrWinners={data} />
             :
             null
         }

@@ -1,5 +1,6 @@
+// Core
 import React, {memo, useMemo} from "react";
-//assets
+// Assets
 import {ReactComponent as IconSelectArrow} from "../../assets/icons/icon-select-arrow.svg";
 
 const icons = {

@@ -1,5 +1,5 @@
 // Core
-import React, {useEffect, useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState, memo} from "react";
 // Styles
 import "./index.scss";
 // Components
@@ -8,11 +8,13 @@ import LeaderCard from "../LeaderCard";
 // Local helpers
 const getRemadeArr = arr => [...arr].reverse();
 
-const LeaderBoard = ({arrWinners, isLoading}) => {
+
+const LeaderBoard = ({arrWinners}) => {
   const [stateArrWinners, setStateArrWinners] = useState(getRemadeArr(arrWinners));
 
   // animation effect helper
   const setTimeOut = useCallback((cards, i) => {
+    if (!cards) cards = document.querySelectorAll(".leader-card");
     setTimeout(() => {
       cards[i].style.display = "flex";
       if (cards[++i]) setTimeOut(cards, i);
@@ -21,15 +23,12 @@ const LeaderBoard = ({arrWinners, isLoading}) => {
 
   // effects
   useEffect(() => {
-    if (!isLoading) {
-      setStateArrWinners(getRemadeArr(arrWinners));
-    }
-  },[arrWinners, isLoading]);
+    setStateArrWinners(getRemadeArr(arrWinners));
+  }, [arrWinners]);
 
   useEffect(() => {
-    const allCards = document.querySelectorAll(".leader-card");
-    setTimeOut(allCards, 0);
-  },[setTimeOut]);
+    setTimeOut(undefined, 0);
+  }, [setTimeOut, stateArrWinners]);
 
   return (
     <div className="leader-board">
@@ -40,4 +39,4 @@ const LeaderBoard = ({arrWinners, isLoading}) => {
   )
 };
 
-export default LeaderBoard;
+export default memo(LeaderBoard);

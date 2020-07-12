@@ -1,5 +1,10 @@
 // Core
 import React, {useCallback, useReducer, useState} from "react";
+// Libs
+import {format} from "date-fns";
+// State
+import {useDispatch} from "react-redux";
+import {sendWinner} from "../winners/state/action";
 // Components
 import Select from "../../components/Select";
 import GameTable from "../../components/GameTable";
@@ -7,9 +12,6 @@ import GameTable from "../../components/GameTable";
 import {useGameSettingsFetch} from "./hooks/useGameSettingsFetch";
 // Helpers
 import {isEmptyObj} from "../../helpers";
-import {sendWinner} from "../winners/state/action";
-import {useDispatch} from "react-redux";
-import {format} from "date-fns";
 
 const GameField = () => {
   const dispatch = useDispatch();
@@ -89,9 +91,9 @@ const GameField = () => {
           <button type="button" className="button" onClick={startGame}>{gameControls.winner ? "Play again" : "Play"}</button>
         </div>
         <GameTable
-          settings={getGameSetting()}
+          settings={gameControls.isPlaying ? getGameSetting() : undefined}
           isPlaying={gameControls.isPlaying}
-          finishGame={finishGame}
+          finishGame={gameControls.isPlaying ? finishGame : undefined}
           message={gameControls.winner}
         />
       </div>
