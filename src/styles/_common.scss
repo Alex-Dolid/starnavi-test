@@ -81,6 +81,11 @@ html, body, #root {
   padding: 20px 15px;
   border-radius: 7px;
   font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
 }
 
 .error {
